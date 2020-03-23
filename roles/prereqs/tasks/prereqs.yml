@@ -1,0 +1,49 @@
+---
+
+- name: Install unzip
+  become: true
+  yum:
+    name: unzip
+    state: present
+
+- name: "Paritioning /dev/{{ prereqs.added_disk }}"
+  parted:
+    device: "/dev/{{ prereqs.added_disk }}"
+    flags: [ lvm ]
+    number: 1
+    state: present
+  become: true
+
+# The volume group is already attached when in an AWS environment so
+# do not try to create or attach it when in AWS
+- name: Create LVM group
+  lvg:
+    vg: "{{ prereqs.lvg.name }}"
+    pvs: "{{ physical_volume }}"
+    pesize: "{{ prereqs.lvg.pesize }}"
+  become: true
+
+- name: LVM Create
+  become: "yes"
+  lvol:
+    lv: "{{ item.name }}"
+    vg: "/dev/{{ prereqs.lvg.name }}"
+    size: "{{ item.size }}"
+    force: "yes"
+  with_items: "{{ prereqs.lvms }}"
+
+- name: Format filesystems
+  filesystem:
+    fstype: ext3
+    dev: "/dev/{{ prereqs.lvg.name }}/{{ item.name }}"
+  become: true
+  with_items: "{{ prereqs.lvms }}"
+
+- name: Mount filesystems
+  mount:
+    fstype: ext3
+    path: "{{ item.mount }}"
+    src: "/dev/{{ prereqs.lvg.name }}/{{ item.name }}"
+    state: "mounted"
+  become: true
+  with_items: "{{ prereqs.lvms }}"

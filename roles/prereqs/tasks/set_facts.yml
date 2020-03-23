@@ -1,0 +1,5 @@
+---
+
+- name: Setting physical drive to /dev/sdb1
+  set_fact:
+    physical_volume: "/dev/sdb1"

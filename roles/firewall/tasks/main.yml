@@ -1,0 +1,4 @@
+---
+
+- name: Disable firewall
+  import_tasks: disable_firewall.yml

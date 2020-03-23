@@ -1,0 +1,7 @@
+---
+
+- name: Include facts
+  import_tasks: set_facts.yml
+
+- name: Include prereqs
+  import_tasks: prereqs.yml

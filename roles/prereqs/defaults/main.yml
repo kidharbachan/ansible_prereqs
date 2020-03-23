@@ -1,0 +1,14 @@
+---
+user: prometheus
+group: prometheus
+prereqs:
+  added_disk: sdb
+  lvg:
+    name: data_vg
+    pesize: 4
+
+  lvms:
+    - name: prometheus
+      size: 240g
+      mount: "/var/lib/prometheus"
+

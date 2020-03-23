@@ -1,0 +1,23 @@
+---
+
+- name: Confirm firewalld is installed
+  yum:
+    name: firewalld
+    state: present
+
+- name: Stop firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+
+- name: Disable firewalld service
+  systemd:
+    name: firewalld
+    enabled: "no"
+
+- name: Iptables flush filter
+  iptables:
+    chain: "{{ item }}"
+    flush: yes
+  with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
+
