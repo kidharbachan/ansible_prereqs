@@ -1,6 +1,6 @@
 ---
-user: prometheus
-group: prometheus
+user: root
+group: root
 prereqs:
   added_disk: sdb
   lvg:
@@ -8,7 +8,7 @@ prereqs:
     pesize: 4
 
   lvms:
-    - name: prometheus
-      size: 240g
-      mount: "/var/lib/prometheus"
+    - name: k3s_storage
+      size: 99g
+      mount: "/k3s_storage"
 
